@@ -20,7 +20,7 @@ const TaskComponent = (props) => {
     const handleCancel = () => { setShow(false) };
     const tasks = useSelector((state) => state.allTasks);
 
-    const saveTask = async (task) => {
+    const saveTask = async () => {
         await axios
             .post(`http://localhost:8000/api/v1/tasks`, {
                 name: name,
@@ -69,20 +69,20 @@ const TaskComponent = (props) => {
     })
 
     const renderListError = Object.entries(error.length ? error[0] : []).map((e) => {
-        return (<p>{e[1].join(',')}</p>)
+        return (<p key={e[0]}>{e[1].join(',')}</p>)
     });
 
     return (
         <div className="ui grid container">
 
 
-            <div class="ui form">
-                <div class="four fields">
-                    <div class="field">
+            <div className="ui form">
+                <div className="four fields">
+                    <div className="field">
                         <label>Filter by name</label>
-                        <input type="text" onChange={(e) => setSearchFilter(e.target.value)} />
+                        <input type="text" onChange={(e) => setSearchFilter(e.target.value)}/>
                     </div>
-                    <div class="field">
+                    <div className="field">
                         <label>Filter by state</label>
                         <select className="ui fluid dropdown" onChange={(e) => setCompletedFilter(e.target.value)}>
                             <option value="">All</option>
@@ -90,11 +90,11 @@ const TaskComponent = (props) => {
                             <option value="1">Completed</option>
                         </select>
                     </div>
-                    <div class="field">
+                    <div className="field">
                         <label>Click to search</label>
                         <Button className="ui secondary button" onClick={() => fetchTasks({ page: tasks.pages.current - 1, search: searchFilter, completed: completedFilter })}>Search Tasks</Button>
                     </div>
-                    <div class="field">
+                    <div className="field">
                         <label>Click to create</label>
                         <Modal
                             onClose={() => setOpen(false)}

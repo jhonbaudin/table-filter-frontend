@@ -25,7 +25,7 @@ const TaskDetail = () => {
     }
 
     const updateTask = async (task) => {
-        const response = await axios
+        await axios
             .put(`http://localhost:8000/api/v1/tasks/${task.id}`, {
                 name: task.name,
                 completed: task.completed,

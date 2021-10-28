@@ -10,6 +10,8 @@ const TaskComponent = (props) => {
     const [showResponse, setShowResponse] = useState(false)
     const [open, setOpen] = useState(false)
     const [completed, setCompleted] = useState(0)
+    const [completedFilter, setCompletedFilter] = useState(0)
+    const [searchFilter, setSearchFilter] = useState('')
     const [name, setName] = useState('')
     const [msg, setMsg] = useState('');
     const [error, setError] = useState([]);
@@ -19,7 +21,7 @@ const TaskComponent = (props) => {
     const tasks = useSelector((state) => state.allTasks);
 
     const saveTask = async (task) => {
-        const response = await axios
+        await axios
             .post(`http://localhost:8000/api/v1/tasks`, {
                 name: name,
                 completed: completed,
@@ -73,48 +75,74 @@ const TaskComponent = (props) => {
     return (
         <div className="ui grid container">
 
-            <Modal
-                onClose={() => setOpen(false)}
-                onOpen={() => setOpen(true)}
-                open={open}
-                trigger={<Button className="ui primary button">Create Task</Button>}
-            >
-                <Modal.Header>Creating a task</Modal.Header>
-                <Modal.Content>
-                    {showResponse &&
-                        <div className="ui info message" style={{ "marginBottom": "20px" }}>
-                            <i className="close icon"></i>
-                            <div className="header">
-                                {msg}
-                            </div>
-                            {renderListError}
-                        </div>}
-                    <div className="ui form">
-                        <div className="two fields">
-                            <div className="field">
-                                <label>Name</label>
-                                <input type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
-                            </div>
-                            <div className="field">
-                                <label>Status</label>
-                                <select className="ui fluid dropdown" onChange={(e) => setCompleted(e.target.value)} defaultValue={0} >
-                                    <option value="0">On hold</option>
-                                    <option value="1">Completed</option>
-                                </select>
-                            </div>
-                        </div>
+
+            <div class="ui form">
+                <div class="four fields">
+                    <div class="field">
+                        <label>Filter by name</label>
+                        <input type="text" onChange={(e) => setSearchFilter(e.target.value)} />
                     </div>
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button color='black' onClick={() => { setOpen(false); setName(''); setCompleted(0) }}>
-                        Close
-                    </Button>
-                    <Button
-                        onClick={() => { saveTask() }}
-                        positive
-                    >Save</Button>
-                </Modal.Actions>
-            </Modal>
+                    <div class="field">
+                        <label>Filter by state</label>
+                        <select className="ui fluid dropdown" onChange={(e) => setCompletedFilter(e.target.value)}>
+                            <option value="">All</option>
+                            <option value="0">On hold</option>
+                            <option value="1">Completed</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Click to search</label>
+                        <Button className="ui secondary button" onClick={() => fetchTasks({ page: tasks.pages.current - 1, search: searchFilter, completed: completedFilter })}>Search Tasks</Button>
+                    </div>
+                    <div class="field">
+                        <label>Click to create</label>
+                        <Modal
+                            onClose={() => setOpen(false)}
+                            onOpen={() => setOpen(true)}
+                            open={open}
+                            trigger={<Button className="ui primary button">Create Task</Button>}
+                        >
+                            <Modal.Header>Creating a task</Modal.Header>
+                            <Modal.Content>
+                                {showResponse &&
+                                    <div className="ui info message" style={{ "marginBottom": "20px" }}>
+                                        <i className="close icon"></i>
+                                        <div className="header">
+                                            {msg}
+                                        </div>
+                                        {renderListError}
+                                    </div>}
+                                <div className="ui form">
+                                    <div className="two fields">
+                                        <div className="field">
+                                            <label>Name</label>
+                                            <input type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
+                                        </div>
+                                        <div className="field">
+                                            <label>Status</label>
+                                            <select className="ui fluid dropdown" onChange={(e) => setCompleted(e.target.value)} defaultValue={0} >
+                                                <option value="0">On hold</option>
+                                                <option value="1">Completed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Modal.Content>
+                            <Modal.Actions>
+                                <Button color='black' onClick={() => { setOpen(false); setName(''); setCompleted(0) }}>
+                                    Close
+                                </Button>
+                                <Button
+                                    onClick={() => { saveTask() }}
+                                    positive
+                                >Save</Button>
+                            </Modal.Actions>
+                        </Modal>
+                    </div>
+                </div>
+            </div>
+
+
 
             <table className="ui celled padded table">
                 <thead>
@@ -131,15 +159,15 @@ const TaskComponent = (props) => {
                 <tfoot>
                     <tr><th colSpan="6">
                         <div className="ui right floated pagination menu">
-                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: tasks.pages.current - 1 })}><i className="left chevron icon"></i></button>
+                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: tasks.pages.current - 1, search: searchFilter, completed: completedFilter })}><i className="left chevron icon"></i></button>
 
-                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: 1 })}>1</button>
+                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: 1, search: searchFilter, completed: completedFilter })}>1</button>
 
-                            <button className="ui primary button" style={{ border: '0' }} ><div className="ui input"><input style={{ width: '60px', height: '35px' }} type="number" onChange={(e) => fetchTasks({ page: e.target.value })} value={tasks.pages.current} /></div></button>
+                            <button className="ui primary button" style={{ border: '0' }} ><div className="ui input"><input style={{ width: '60px', height: '35px' }} type="number" onChange={(e) => fetchTasks({ page: e.target.value, search: searchFilter, completed: completedFilter })} value={tasks.pages.current} /></div></button>
 
-                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: tasks.pages.last })}>{tasks.pages.last}</button>
+                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: tasks.pages.last, search: searchFilter, completed: completedFilter })}>{tasks.pages.last}</button>
 
-                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: tasks.pages.current + 1 })}><i className="right chevron icon"></i></button>
+                            <button className="icon item" style={{ border: '0', cursor: 'pointer' }} onClick={() => fetchTasks({ page: tasks.pages.current + 1, search: searchFilter, completed: completedFilter })}><i className="right chevron icon"></i></button>
                         </div>
                     </th>
                     </tr></tfoot>
@@ -151,7 +179,7 @@ const TaskComponent = (props) => {
                 onCancel={handleCancel}
                 onConfirm={handleConfirm}
             />
-        </div>
+        </div >
     )
 
 }

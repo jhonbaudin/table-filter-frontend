@@ -10,7 +10,7 @@ const TaskList = () => {
 
     const fetchTasks = async (payload = {}) => {
         const response = await axios
-            .get("http://localhost:8000/api/v1/tasks", { params: { page: payload.page ? payload.page : 1, limit: payload.limit ? payload.limit : 15, search: payload.search ? payload.page : '', completed: payload.completed ? payload.completed : '' } })
+            .get("http://localhost:8000/api/v1/tasks", { params: { page: payload.page ? payload.page : 1, limit: payload.limit ? payload.limit : 15, search: payload.search ? payload.search : '', completed: payload.completed ? payload.completed : '' } })
             .catch((err) => {
                 console.log(err)
             })

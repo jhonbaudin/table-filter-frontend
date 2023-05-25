@@ -1,9 +1,9 @@
 ## Inilialization
 
-After you run your local server with the [ic_backend](https://gitlab.com/jhonbaudin/ic_backend) then run the following commands to start with the frontend application
+After you run your local server with the [table-filter-backend](https://github.com/jhonbaudin/table-filter-backend) then run the following commands to start with the frontend application
 
 ```sh
-git clone https://gitlab.com/jhonbaudin/ic_frontend.git ic_frontend && cd ic_frontend && npm install
+git clone https://github.com/jhonbaudin/table-filter-frontend.git table-filter-frontend && cd ic_frontend && npm install
 ```
 
 After the installation, you can run:

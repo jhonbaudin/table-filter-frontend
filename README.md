@@ -3,7 +3,7 @@
 After you run your local server with the [table-filter-backend](https://github.com/jhonbaudin/table-filter-backend) then run the following commands to start with the frontend application
 
 ```sh
-git clone https://github.com/jhonbaudin/table-filter-frontend.git table-filter-frontend && cd ic_frontend && npm install
+git clone https://github.com/jhonbaudin/table-filter-frontend.git table-filter-frontend && cd table-filter-frontend && npm install
 ```
 
 After the installation, you can run:
